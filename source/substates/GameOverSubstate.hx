@@ -49,7 +49,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		Conductor.songPosition = 0;
 
 		bgColor = FlxColor.RED;
-		_bgSprite.scrollFactor.set();
+		_bgSprite.scrollFactor.set(0, 0);
+		_bgSprite.scale.set(1.2, 1.2);
 		_bgSprite.alpha = 0.5;
 
 		var distanceY = 200;
@@ -60,6 +61,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 		respawnButton.buttonScreenCenter(X);
 		respawnButton.staticButton();
+		respawnButton.buttonUpdateHitbox();
 		add(respawnButton);
 
 		var backButton:MCButton = new MCButton("Title Screen", 0, distanceY + 60, LARGE);
@@ -69,6 +71,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 		backButton.buttonScreenCenter(X);
 		backButton.staticButton();
+		respawnButton.buttonUpdateHitbox();
 		add(backButton);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
@@ -77,7 +80,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		PlayState.instance.callOnScripts('onGameOverStart', []);
 
 		PlayState.instance.camHUD.visible = false;
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		cameras = [PlayState.instance.camOther];
 
 		super.create();
 	}

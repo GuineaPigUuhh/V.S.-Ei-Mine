@@ -1,13 +1,11 @@
 package substates;
 
 import backend.WeekData;
-
-import objects.Character;
 import flixel.FlxObject;
 import flixel.FlxSubState;
-
-import states.StoryMenuState;
+import objects.Character;
 import states.FreeplayState;
+import states.StoryMenuState;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -23,57 +21,69 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public static var instance:GameOverSubstate;
 
-	public static function resetVariables() {
+	public static function resetVariables()
+	{
 		characterName = 'bf-dead';
 		deathSoundName = 'fnf_loss_sfx';
 		loopSoundName = 'gameOver';
 		endSoundName = 'gameOverEnd';
 
 		var _song = PlayState.SONG;
-		if(_song != null)
+		if (_song != null)
 		{
-			if(_song.gameOverChar != null && _song.gameOverChar.trim().length > 0) characterName = _song.gameOverChar;
-			if(_song.gameOverSound != null && _song.gameOverSound.trim().length > 0) deathSoundName = _song.gameOverSound;
-			if(_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
-			if(_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
+			if (_song.gameOverChar != null && _song.gameOverChar.trim().length > 0)
+				characterName = _song.gameOverChar;
+			if (_song.gameOverSound != null && _song.gameOverSound.trim().length > 0)
+				deathSoundName = _song.gameOverSound;
+			if (_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0)
+				loopSoundName = _song.gameOverLoop;
+			if (_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0)
+				endSoundName = _song.gameOverEnd;
 		}
 	}
+
 	override function create()
 	{
 		instance = this;
 
 		Conductor.songPosition = 0;
 
-		var red:FlxSprite = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height,FlxColor.RED);
-		red.screenCenter();
-		red.scrollFactor.set(0,0);
-		red.alpha = 0.5;
-		add(red);
+		bgColor = FlxColor.RED;
+		_bgSprite.scrollFactor.set();
+		_bgSprite.alpha = 0.5;
 
 		var distanceY = 200;
 		var respawnButton:MCButton = new MCButton("Respawn", 0, distanceY, LARGE);
-		respawnButton.onClick = function(){endBullshit();}
+		respawnButton.onClick = function()
+		{
+			endBullshit();
+		}
 		respawnButton.buttonScreenCenter(X);
 		respawnButton.staticButton();
 		add(respawnButton);
 
 		var backButton:MCButton = new MCButton("Title Screen", 0, distanceY + 60, LARGE);
-		backButton.onClick = function(){backToMenu();}
+		backButton.onClick = function()
+		{
+			backToMenu();
+		}
 		backButton.buttonScreenCenter(X);
 		backButton.staticButton();
 		add(backButton);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
-		
+
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart', []);
 
-		cameras = [PlayState.instance.camOther];
+		PlayState.instance.camHUD.visible = false;
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
 	}
 
 	public var startedDeath:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -88,9 +98,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (controls.BACK)
 		{
 			backToMenu();
-	
 		}
-		
+
 		if (FlxG.sound.music.playing)
 		{
 			Conductor.songPosition = FlxG.sound.music.time;
@@ -121,7 +130,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
-	}	
+	}
 
 	function endBullshit():Void
 	{

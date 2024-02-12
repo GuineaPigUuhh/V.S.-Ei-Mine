@@ -1,32 +1,35 @@
 package states;
 
 import backend.Highscore;
+import backend.Rating;
+import backend.Section;
+import backend.Song;
 import backend.StageData;
 import backend.WeekData;
-import backend.Song;
-import backend.Section;
-import backend.Rating;
+import cutscenes.CutsceneHandler;
+import cutscenes.DialogueBoxPsych;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.animation.FlxAnimationController;
+import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxSave;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
-import flixel.util.FlxSave;
-import flixel.input.keyboard.FlxKey;
-import flixel.animation.FlxAnimationController;
-import lime.utils.Assets;
-import openfl.utils.Assets as OpenFlAssets;
-import openfl.events.KeyboardEvent;
 import haxe.Json;
-import cutscenes.CutsceneHandler;
-import cutscenes.DialogueBoxPsych;
-import states.StoryMenuState;
+import lime.utils.Assets;
+import objects.*;
+import objects.Note.EventNote;
+import openfl.events.KeyboardEvent;
+import openfl.utils.Assets as OpenFlAssets;
 import states.FreeplayState;
-import states.editors.ChartingState;
+import states.StoryMenuState;
 import states.editors.CharacterEditorState;
-import substates.PauseSubState;
+import states.editors.ChartingState;
+import states.stages.objects.*;
 import substates.GameOverSubstate;
+import substates.PauseSubState;
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
@@ -42,14 +45,11 @@ import VideoHandler;
 import vlc.MP4Handler as VideoHandler;
 #end
 #end
-import objects.Note.EventNote;
-import objects.*;
-import states.stages.objects.*;
 #if LUA_ALLOWED
 import psychlua.*;
 #else
-import psychlua.LuaUtils;
 import psychlua.HScript;
+import psychlua.LuaUtils;
 #end
 #if SScript
 import tea.SScript;
@@ -272,6 +272,9 @@ class PlayState extends MusicBeatState
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+
+	// to Skip the Cutscene
+	var video:VideoHandler;
 
 	override public function create()
 	{
@@ -872,8 +875,8 @@ class PlayState extends MusicBeatState
 			startAndEnd();
 			return;
 		}
+		video = new VideoHandler();
 
-		var video:VideoHandler = new VideoHandler();
 		#if (hxCodec >= "3.0.0")
 		// Recent versions
 		video.play(filepath);

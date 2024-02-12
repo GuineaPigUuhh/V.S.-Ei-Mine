@@ -101,7 +101,7 @@ class MainMenuState extends MusicBeatState
 			#end
 		}
 
-		if (debug_stage)
+		if (DebugChecker.get("states"))
 		{
 			if (FlxG.keys.justPressed.F1)
 				freeplayButton.disabled = !freeplayButton.disabled;

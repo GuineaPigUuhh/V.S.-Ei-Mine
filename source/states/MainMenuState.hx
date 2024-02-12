@@ -3,11 +3,11 @@ package states;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import lime.app.Application;
-import states.editors.MasterEditorMenu;
-import options.OptionsState;
-import guineapiguuhh_stuff.*;
 import flixel.util.FlxAxes;
+import guineapiguuhh_stuff.*;
+import lime.app.Application;
+import options.OptionsState;
+import states.editors.MasterEditorMenu;
 
 class MainMenuState extends MusicBeatState
 {
@@ -15,6 +15,7 @@ class MainMenuState extends MusicBeatState
 	public static var engineVersion = '0.2.0';
 
 	var bg:FlxSprite; // for debug
+	var freeplayButton:MCButton;
 	var debug_stage = true;
 
 	override function create()
@@ -102,7 +103,8 @@ class MainMenuState extends MusicBeatState
 
 		if (debug_stage)
 		{
-								
+			if (FlxG.keys.justPressed.F1)
+				freeplayButton.disabled = !freeplayButton.disabled;
 		}
 
 		super.update(elapsed);
@@ -112,41 +114,57 @@ class MainMenuState extends MusicBeatState
 	{
 		var distanceButtons = 60;
 		var storyButton = new MCButton("Story mode", 0, 0, LARGE);
-		storyButton.onClick = function() { MusicBeatState.switchState(new StoryMenuState()); }
+		storyButton.onClick = function()
+		{
+			MusicBeatState.switchState(new StoryMenuState());
+		}
+		storyButton.clickSound = 'confirmMenu';
 		storyButton.buttonScreenCenter(XY);
-		
-		var freeplayButton = new MCButton("Freeplay", 0, storyButton.mcButton.y + distanceButtons, LARGE);
-		freeplayButton.onClick = function() { MusicBeatState.switchState(new FreeplayState()); }
+
+		freeplayButton = new MCButton("Freeplay", 0, storyButton.mcButton.y + distanceButtons, LARGE);
+		freeplayButton.onClick = function()
+		{
+			MusicBeatState.switchState(new FreeplayState());
+		}
 		freeplayButton.disabled = !ClientPrefs.data.freeplayUnlock;
 		freeplayButton.buttonScreenCenter(X);
 
 		var creditsButton = new MCButton("Credits", 0, freeplayButton.mcButton.y + distanceButtons, LARGE);
-		creditsButton.onClick = function() { MusicBeatState.switchState(new CreditsState()); }
+		creditsButton.onClick = function()
+		{
+			MusicBeatState.switchState(new CreditsState());
+		}
 		creditsButton.buttonScreenCenter(X);
 
 		var halfButtons_size = 1.208;
 		var optionsButton = new MCButton("Options...", 391.5, creditsButton.mcButton.y + 100, SMALL);
 		optionsButton.onClick = function()
+		{
+			MusicBeatState.switchState(new OptionsState());
+			OptionsState.onPlayState = false;
+			if (PlayState.SONG != null)
 			{
-				MusicBeatState.switchState(new OptionsState());
-				OptionsState.onPlayState = false;
-				if (PlayState.SONG != null)
-				{
-					PlayState.SONG.arrowSkin = null;
-					PlayState.SONG.splashSkin = null;
-					PlayState.stageUI = 'normal';
-				}
-			};
+				PlayState.SONG.arrowSkin = null;
+				PlayState.SONG.splashSkin = null;
+				PlayState.stageUI = 'normal';
+			}
+		};
 
 		var exitButton = new MCButton("Exit Game", 645.5, creditsButton.mcButton.y + 100, SMALL);
-		exitButton.onClick = function() { Sys.exit(0); }
+		exitButton.onClick = function()
+		{
+			Sys.exit(0);
+		}
 
 		var canalButton = new MCButton("", optionsButton.mcButton.x - 60, exitButton.mcButton.y, YOUTUBE);
-		canalButton.onClick = function() { CoolUtil.browserLoad("https://www.youtube.com/@lorenzolo2264"); }
+		canalButton.onClick = function()
+		{
+			CoolUtil.browserLoad("https://www.youtube.com/@lorenzolo2264");
+		}
 
 		var secretButton = new MCButton("??", exitButton.mcButton.x + exitButton.mcButton.width + 10, exitButton.mcButton.y, SQUARE);
-		secretButton.onClick = function() { }
-		
+		secretButton.onClick = function() {}
+
 		add(canalButton);
 		add(secretButton);
 		add(exitButton);
@@ -154,5 +172,5 @@ class MainMenuState extends MusicBeatState
 		add(optionsButton);
 		add(freeplayButton);
 		add(storyButton);
-	}	
+	}
 }

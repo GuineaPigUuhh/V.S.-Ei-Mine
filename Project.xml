@@ -2,8 +2,9 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' V.S. Ei Mine" file="V.S. EiMine" packageName="com.eimanécompany.eiminemod" package="com.eimanécompany.eiminemod" main="Main" version="0.2.8" company="EiMané Company" />
+	<app title="Friday Night Funkin': V.S. Ei Mine" file="V.S. Ei Mine" packageName="com.eimanécompany.eiminemod" package="com.eimanécompany.eiminemod" main="Main" version="0.2.8" company="EiMané Company" />
 	<!--HAHAHAHAHAH LORENZO O MOD é MEU AGORA-->
+	<!--V.S. Ei Mine-->
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -25,8 +26,12 @@
 	<define name="HSCRIPT_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
 	<define name="ACHIEVEMENTS_ALLOWED" />
-	<define name="DISCORD_ALLOWED" />
+	<define name="DISCORD_ALLOWED"/>
+	<define name="DISCORD_BUTTONS_ALLOWED"/>
+	<!--
 	<define name="PSYCH_WATERMARKS"/>
+	<define name="modFinalBuild"/>
+	-->
 	<define name="VIDEOS_ALLOWED" if="windows || linux || android" unless="32bits"/>
 
 	<section if="officialBuild">
@@ -98,11 +103,13 @@
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="SScript" if="HSCRIPT_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
-	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 	<haxelib name="flxanimate"/>
 
+	<!--please use the version from https://github.com/GuineaPigUuhh/hxdiscord_rpc-->
+	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
+
 	<!-- Disable Discord IO Thread -->
-	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_ALLOWED" />
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
 	<!-- Enables a terminal log prompt on debug builds -->

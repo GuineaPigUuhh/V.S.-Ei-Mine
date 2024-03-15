@@ -4,6 +4,8 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import backend.PsychCamera;
+import openfl.ui.Mouse;
+import openfl.ui.MouseCursor;
 
 class MusicBeatState extends FlxUIState
 {

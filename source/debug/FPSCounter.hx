@@ -33,10 +33,10 @@ class FPSCounter extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat(MCHelper.font, 14, color);
+		defaultTextFormat = new TextFormat(Paths.font("minecraft.ttf"), 14, color);
 		autoSize = LEFT;
 		multiline = true;
-		text = "FPS: ";
+		text = "";
 		alpha = 0.58;
 
 		times = [];
@@ -66,6 +66,9 @@ class FPSCounter extends TextField
 		memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 
 		text = '${currentFPS} FPS' + " / " + memoryMegas + " MB";
+
+		// Funny Image Maker
+		//text = '4122 FPS' + " / " + memoryMegas + " MB";
 
 		textColor = 0xFFFFFFFF;
 		if (currentFPS < FlxG.drawFramerate * 0.5)

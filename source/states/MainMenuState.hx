@@ -8,21 +8,17 @@ import guineapiguuhh_stuff.*;
 import lime.app.Application;
 import options.OptionsState;
 import states.editors.MasterEditorMenu;
+import openfl.Assets;
 
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.3'; // This is also used for Discord RPC
 	public static var engineVersion = '0.2.0';
 
-	var bg:FlxSprite; // for debug
-	var freeplayButton:MCButton;
-	var debug_stage = true;
+	var freeplayButton:MCButton; // For the Debug
 
 	override function create()
 	{
-		FlxG.mouse.visible = true;
-		FlxG.mouse.useSystemCursor = true;
-
 		#if MODS_ALLOWED
 		Mods.pushGlobalMods();
 		#end
@@ -39,7 +35,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var random_paronama = FlxG.random.int(1, 4);
-		bg = new FlxSprite(508).loadGraphic(Paths.image('guineapiguuhh_stuff/backgrounds/final_' + random_paronama));
+		var bg = new FlxSprite(508).loadGraphic(Paths.image('guineapiguuhh_stuff/backgrounds/final_' + random_paronama));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set(0, 0);
 		bg.updateHitbox();
@@ -58,15 +54,19 @@ class MainMenuState extends MusicBeatState
 
 		createMCButtons();
 
-		var coolPhraseForTheDay:FlxText = new FlxText(logo.x + logo.width - 200, logo.y + 170, 320, CoolPhrases.randomPhrase());
-		coolPhraseForTheDay.setFormat(MCHelper.font, 25, FlxColor.YELLOW, CENTER, SHADOW, 0xFF3C4114);
+		// Phrases of The Day!!
+		var coolPhrases:String = Assets.getText(Paths.txt('phrases'));
+        var separedPhrases:Array<String> = coolPhrases.split('\n');
+
+		var coolPhraseForTheDay:FlxText = new FlxText(logo.x + logo.width - 200, logo.y + 170, 320, FlxG.random.getObject(separedPhrases));
+		coolPhraseForTheDay.setFormat(Paths.font("minecraft.ttf"), 25, FlxColor.YELLOW, CENTER, SHADOW, 0xFF3C4114);
 		coolPhraseForTheDay.angle = -22;
 		coolPhraseForTheDay.borderSize = 2;
 		add(coolPhraseForTheDay);
 		FlxTween.tween(coolPhraseForTheDay, {"scale.x": 1.08, "scale.y": 1.08}, 0.15, {type: PINGPONG});
 
-		var modVer:FlxText = new FlxText(3, FlxG.height - 30, FlxG.width, "Friday Night Funkin': EiMine Re-Mine " + engineVersion);
-		modVer.setFormat(MCHelper.font, 19, FlxColor.WHITE, LEFT, SHADOW, 0xFF383838);
+		var modVer:FlxText = new FlxText(3, FlxG.height - 30, FlxG.width, "Friday Night Funkin': V.S. Ei Mine " + engineVersion);
+		modVer.setFormat(Paths.font("minecraft.ttf"), 19, FlxColor.WHITE, LEFT, SHADOW, 0xFF383838);
 		modVer.borderSize = 2;
 		add(modVer);
 
@@ -101,12 +101,11 @@ class MainMenuState extends MusicBeatState
 			#end
 		}
 
-		if (DebugChecker.get("states"))
-		{
-			if (FlxG.keys.justPressed.F1)
-				freeplayButton.disabled = !freeplayButton.disabled;
-		}
-
+		#if !modFinalBuild
+		if (FlxG.keys.justPressed.F1)
+			freeplayButton.disabled = !freeplayButton.disabled;
+		#end
+		
 		super.update(elapsed);
 	}
 
@@ -114,31 +113,21 @@ class MainMenuState extends MusicBeatState
 	{
 		var distanceButtons = 60;
 		var storyButton = new MCButton("Story mode", 0, 0, LARGE);
-		storyButton.onClick = function()
-		{
-			MusicBeatState.switchState(new StoryMenuState());
-		}
+		storyButton.callback = function(self) { new FlxTimer().start(1, function(tmr:FlxTimer) MusicBeatState.switchState(new StoryMenuState())); };
 		storyButton.clickSound = 'confirmMenu';
-		storyButton.buttonScreenCenter(XY);
+		storyButton.screenCenter(XY);
 
 		freeplayButton = new MCButton("Freeplay", 0, storyButton.mcButton.y + distanceButtons, LARGE);
-		freeplayButton.onClick = function()
-		{
-			MusicBeatState.switchState(new FreeplayState());
-		}
+		freeplayButton.callback = function(self) MusicBeatState.switchState(new FreeplayState());
 		freeplayButton.disabled = !ClientPrefs.data.freeplayUnlock;
-		freeplayButton.buttonScreenCenter(X);
+		freeplayButton.screenCenter(X);
 
 		var creditsButton = new MCButton("Credits", 0, freeplayButton.mcButton.y + distanceButtons, LARGE);
-		creditsButton.onClick = function()
-		{
-			MusicBeatState.switchState(new CreditsState());
-		}
-		creditsButton.buttonScreenCenter(X);
+		creditsButton.callback = function(self) MusicBeatState.switchState(new CreditsState());
+		creditsButton.screenCenter(X);
 
-		var halfButtons_size = 1.208;
 		var optionsButton = new MCButton("Options...", 391.5, creditsButton.mcButton.y + 100, SMALL);
-		optionsButton.onClick = function()
+		optionsButton.callback = function(self)
 		{
 			MusicBeatState.switchState(new OptionsState());
 			OptionsState.onPlayState = false;
@@ -151,26 +140,14 @@ class MainMenuState extends MusicBeatState
 		};
 
 		var exitButton = new MCButton("Exit Game", 645.5, creditsButton.mcButton.y + 100, SMALL);
-		exitButton.onClick = function()
-		{
-			Sys.exit(0);
-		}
+		exitButton.callback = function(self)	Sys.exit(0);
 
 		var canalButton = new MCButton("", optionsButton.mcButton.x - 60, exitButton.mcButton.y, YOUTUBE);
-		canalButton.onClick = function()
-		{
-			CoolUtil.browserLoad("https://www.youtube.com/@lorenzolo2264");
-		}
+		canalButton.callback = function(self) CoolUtil.browserLoad("https://www.youtube.com/@lorenzolo2264");
 
-		var secretButton = new MCButton("??", exitButton.mcButton.x + exitButton.mcButton.width + 10, exitButton.mcButton.y, SQUARE);
-		secretButton.onClick = function() {}
+		var githubButton = new MCButton("", exitButton.mcButton.x + exitButton.mcButton.width + 10, exitButton.mcButton.y, GITHUB);
+		githubButton.callback = function(self) CoolUtil.browserLoad("https://github.com/GuineaPigUuhh/V.S.-Ei-Mine");
 
-		add(canalButton);
-		add(secretButton);
-		add(exitButton);
-		add(creditsButton);
-		add(optionsButton);
-		add(freeplayButton);
-		add(storyButton);
+		VirtualMouse.easyadd([canalButton, githubButton, exitButton, creditsButton, optionsButton, freeplayButton, storyButton]);
 	}
 }

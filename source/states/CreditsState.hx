@@ -2,6 +2,10 @@ package states;
 
 import objects.AttachedSprite;
 
+// to make the guineapiguuhh_stuff folder more portable
+typedef CreditsState = guineapiguuhh_stuff.MCCredits 
+
+/*
 class CreditsState extends MusicBeatState
 {
 	var curSelected:Int = -1;
@@ -118,7 +122,7 @@ class CreditsState extends MusicBeatState
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		//descText.borderSize = 2.4;
 		descBox.sprTracker = descText;
@@ -283,3 +287,4 @@ class CreditsState extends MusicBeatState
 		return creditsStuff[num].length <= 1;
 	}
 }
+*/

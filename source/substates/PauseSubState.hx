@@ -8,6 +8,7 @@ import flixel.util.FlxStringUtil;
 import options.OptionsState;
 import states.FreeplayState;
 import states.StoryMenuState;
+import portable.utils.WinUtil;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -154,7 +155,7 @@ class PauseSubState extends MusicBeatSubstate
 		if (formattedSongName == 'none' || (formattedSongName != 'none' && formattedPauseMusic == 'none'))
 			return null;
 
-		return (formattedSongName != '') ? formattedSongName : formattedPauseMusic;
+		return formattedSongName.replace('-hardcore', '');
 	}
 
 	var holdTime:Float = 0;

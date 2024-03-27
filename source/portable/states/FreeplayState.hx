@@ -1,4 +1,4 @@
-package states;
+package portable.states;
 
 import backend.Highscore;
 import backend.Song;
@@ -9,10 +9,8 @@ import objects.MusicPlayer;
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
 
-typedef FreeplayState = portable.states.FreeplayState;
-/*
-	class FreeplayState extends MusicBeatState
-	{
+class FreeplayState extends MusicBeatState
+{
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
@@ -606,10 +604,10 @@ typedef FreeplayState = portable.states.FreeplayState;
 		if (!FlxG.sound.music.playing)
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 	}
-	}
+}
 
-	class SongMetadata
-	{
+class SongMetadata
+{
 	public var songName:String = "";
 	public var week:Int = 0;
 	public var songCharacter:String = "";
@@ -627,5 +625,4 @@ typedef FreeplayState = portable.states.FreeplayState;
 		if (this.folder == null)
 			this.folder = '';
 	}
-	}
- */
+}

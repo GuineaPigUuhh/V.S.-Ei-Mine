@@ -1,4 +1,4 @@
-package states;
+package portable.states;
 
 import backend.Highscore;
 import backend.Song;
@@ -10,10 +10,8 @@ import objects.MenuItem;
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
 
-typedef StoryMenuState = portable.states.StoryMenuState;
-/*
-	class StoryMenuState extends MusicBeatState
-	{
+class StoryMenuState extends MusicBeatState
+{
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
 
 	var scoreText:FlxText;
@@ -488,5 +486,4 @@ typedef StoryMenuState = portable.states.StoryMenuState;
 		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
 		#end
 	}
-	}
- */
+}

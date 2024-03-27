@@ -10,17 +10,20 @@ import objects.Character;
 import states.FreeplayState;
 import flixel.effects.FlxFlicker;
 import states.StoryMenuState;
-import guineapiguuhh_stuff.WinUtil;
+import portable.utils.WinUtil;
+import portable.objects.MCButton;
+import portable.VirtualMouse;
+import portable.objects.MCText;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
 	var playingDeathSound:Bool = false;
 	var stageSuffix:String = "";
 
-	var boyfriend:FlxSprite; // temp
+	var boyfriend:Character = PlayState.instance.boyfriend; // ShortShit?
 	var gameOverCam:FlxCamera;
 
-	public var hardCore:Bool = false;
+	public var hardcore:Bool = false;
 
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
@@ -64,7 +67,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		Conductor.songPosition = 0;
 
-		hardCore = Difficulty.getString() == 'hardcore';
+		hardcore = Difficulty.getString() == 'hardcore';
 
 		var red:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.RED);
 		red.screenCenter();
@@ -72,29 +75,54 @@ class GameOverSubstate extends MusicBeatSubstate
 		red.alpha = 0.5;
 		add(red);
 
-		var gameOverTxt:FlxText = new FlxText(0, 100, 0, hardCore ? 'Game over!' : 'You Died!');
-		gameOverTxt.setFormat(Paths.font("minecraft.ttf"), 45);
-		gameOverTxt.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF383838, 3, 1);
+		var gameOverTxt:MCText = new MCText(0, 100, FlxG.width, hardcore ? 'Game over!' : 'You Died!', 45);
 		gameOverTxt.screenCenter(X);
+		gameOverTxt.alignment = CENTER;
 		add(gameOverTxt);
 
-		var player = (PlayState.instance.boyfriend.curCharacter.startsWith("bf") ? "Boyfriend.xml" : "Player");
-		var motiveTxt:FlxText = new FlxText(0, 180, 0, player + ' ' + 'died because he was really bad at rap');
-		motiveTxt.setFormat(Paths.font("minecraft.ttf"), 20);
-		motiveTxt.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF383838, 2, 1);
-		motiveTxt.screenCenter(X);
+		var player = (boyfriend.curCharacter.startsWith("bf") ? "Boyfriend.xml" : "Player");
+		var motiveTxt:MCText = new MCText(0, 180, FlxG.width, player + ' ' + 'died because he was really bad at rap');
+		motiveTxt.alignment = CENTER;
 		add(motiveTxt);
 
-		var scoreTxt:FlxText = new FlxText(0, 220, 0, 'Score: ' + PlayState.instance.songScore);
-		scoreTxt.setFormat(Paths.font("minecraft.ttf"), 22);
-		scoreTxt.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF383838, 2, 1);
-		scoreTxt.screenCenter(X);
-		scoreTxt.applyMarkup('Score: *${PlayState.instance.songScore}*', [
-			new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.YELLOW, false, false, 0xFF3C4114), "*")
-		]);
+		var scoreTxt:MCText = new MCText(0, 220, FlxG.width, 'Score: *${PlayState.instance.songScore}*', 22);
+		scoreTxt.addSpecialPart();
+		scoreTxt.alignment = CENTER;
 		add(scoreTxt);
 
-		createMCButtons();
+		var respawnButton:MCButton = new MCButton("Respawn", 0, 280, LARGE);
+		respawnButton.screenCenter(X);
+		respawnButton.disabled = true;
+		respawnButton.cameras = [gameOverCam];
+
+		var backButton:MCButton = new MCButton("Title Screen", 0, respawnButton.y + 60, LARGE);
+		backButton.callback = function(self) backToMenu();
+		backButton.screenCenter(X);
+		backButton.disabled = true;
+		backButton.cameras = [gameOverCam];
+
+		backButton.callback = function(self)
+		{
+			backButton.disabled = true;
+			respawnButton.disabled = true;
+			backToMenu();
+		};
+		respawnButton.callback = function(self)
+		{
+			backButton.disabled = true;
+			respawnButton.disabled = true;
+
+			endBullshit();
+		};
+
+		VirtualMouse.add([respawnButton, backButton], true);
+
+		new FlxTimer().start(1, (timer) ->
+		{
+			if (!hardcore || (hardcore && !PlayState.isStoryMode))
+				respawnButton.disabled = false;
+			backButton.disabled = false;
+		});
 		deadEffects();
 
 		PlayState.instance.setOnScripts('inGameOver', true);
@@ -128,46 +156,14 @@ class GameOverSubstate extends MusicBeatSubstate
 		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
 	}
 
-	function createMCButtons()
+	private function deadEffects()
 	{
-		var distanceY = 280;
-		var respawnButton:MCButton = new MCButton("Respawn", 0, distanceY, LARGE);
-		respawnButton.callback = function(self) endBullshit();
-		respawnButton.screenCenter(X);
-		respawnButton.disabled = true;
-		respawnButton.collisionCam = gameOverCam;
+		/* Player */
+		boyfriend.color = 0xFF5959;
+		FlxFlicker.flicker(boyfriend, 0.5, 0.1, false);
 
-		var backButton:MCButton = new MCButton("Title Screen", 0, distanceY + 60, LARGE);
-		backButton.callback = function(self) backToMenu();
-		backButton.screenCenter(X);
-		backButton.disabled = true;
-		backButton.collisionCam = gameOverCam;
-
-		VirtualMouse.easyadd([respawnButton, backButton], true);
-
-		new FlxTimer().start(1, (timer) -> {
-			if (!hardCore || (hardCore && !PlayState.isStoryMode))
-			    respawnButton.disabled = false;
-			backButton.disabled = false;
-		});
-	}
-
-	function deadEffects() {
-		var p = PlayState.instance;
-
-		/* Player Animation */
-		p.boyfriend.color = 0xFF5959; 
-		FlxFlicker.flicker(p.boyfriend, 0.5, 0.1, false);
-
-		/* Cam Shit */
-		FlxTween.tween(p.camGame, {angle: p.camGame.angle + 0.5, zoom: p.camGame.zoom + 0.05}, 2);
-	}
-
-	var isEnding:Bool = false;
-
-	function coolStartDeath(?volume:Float = 1):Void
-	{
-		FlxG.sound.playMusic(Paths.music(loopSoundName), volume);
+		/* Camera */
+		FlxTween.tween(PlayState.instance.camGame, {angle: PlayState.instance.camGame.angle + 0.5, zoom: PlayState.instance.camGame.zoom + 0.05}, 2);
 	}
 
 	function backToMenu()
@@ -190,16 +186,12 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	function endBullshit():Void
 	{
-		if (!isEnding)
-		{
-			isEnding = true;
-			FlxG.sound.music.volume = 0;
-			PlayState.instance.vocals.volume = 0;
+		FlxG.sound.music.volume = 0;
+		PlayState.instance.vocals.volume = 0;
 
-			MusicBeatState.resetState();
+		MusicBeatState.resetState();
 
-			PlayState.instance.callOnScripts('onGameOverConfirm', [true]);
-		}
+		PlayState.instance.callOnScripts('onGameOverConfirm', [true]);
 	}
 
 	override function destroy()

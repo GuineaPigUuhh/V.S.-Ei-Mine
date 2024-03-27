@@ -20,9 +20,7 @@ Kint Gurl - Design do Ei Mine Hardcore
 JDaniel Aleatorio - Deu ideias e Avisou sobre Bugs
 Zet0x0 - Fez a Biblioteca que integra botões ao Discord RPC
 Jubscleudo - o Gato Foda
-David Andrei - o Aplicativo que foi usado para fazer os Sprites
 Ei Mine - o Youtuber que tem foco nesse Mod
-[username] - Exatamente Você, Obrigado por Jogar!
 
 ========
 *o cara que não fez nada*

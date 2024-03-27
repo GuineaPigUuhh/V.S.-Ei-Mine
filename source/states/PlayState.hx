@@ -54,7 +54,8 @@ import psychlua.LuaUtils;
 #if SScript
 import tea.SScript;
 #end
-import guineapiguuhh_stuff.WinUtil;
+import portable.utils.WinUtil;
+import portable.objects.MCBar;
 
 /**
  * This is where all the Gameplay stuff happens and is managed
@@ -282,7 +283,6 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		// trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 
 		startCallback = startCountdown;
@@ -1340,7 +1340,6 @@ class PlayState extends MusicBeatState
 
 		if (paused)
 		{
-			// trace('Oopsie doopsie! Paused sound');
 			FlxG.sound.music.pause();
 			vocals.pause();
 			opponentVocals.pause();
@@ -1887,7 +1886,6 @@ class PlayState extends MusicBeatState
 		if (!ClientPrefs.data.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
 		{
 			health = 0;
-			trace("RESET = True");
 		}
 		doDeathCheck();
 
@@ -2235,7 +2233,6 @@ class PlayState extends MusicBeatState
 				}
 
 			case 'Play Animation':
-				// trace('Anim to play: ' + value1);
 				var char:Character = dad;
 				switch (value2.toLowerCase().trim())
 				{
@@ -2643,9 +2640,6 @@ class PlayState extends MusicBeatState
 				{
 					var difficulty:String = Difficulty.getFilePath();
 
-					trace('LOADING NEXT SONG');
-					trace(Paths.formatToSongPath(PlayState.storyPlaylist[0]) + difficulty);
-
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
 					prevCamFollow = camFollow;
@@ -2658,7 +2652,6 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				trace('WENT BACK TO FREEPLAY??');
 				Mods.loadTopMod();
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
@@ -3455,10 +3448,7 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		if (lastBeatHit >= curBeat)
-		{
-			// trace('BEAT HIT: ' + curBeat + ', LAST HIT: ' + lastBeatHit);
 			return;
-		}
 
 		if (generatedMusic)
 			notes.sort(FlxSort.byY, ClientPrefs.data.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
@@ -3610,10 +3600,7 @@ class PlayState extends MusicBeatState
 
 					newScript.destroy();
 					hscriptArray.remove(newScript);
-					trace('failed to initialize tea interp!!! ($file)');
 				}
-				else
-					trace('initialized tea interp successfully: $file');
 			}
 		}
 		catch (e)
@@ -3831,7 +3818,6 @@ class PlayState extends MusicBeatState
 			{
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-				// trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
 
 				// Rating Name
 				ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
@@ -3932,7 +3918,6 @@ class PlayState extends MusicBeatState
 			if (found)
 			{
 				runtimeShaders.set(name, [frag, vert]);
-				// trace('Found shader $name!');
 				return true;
 			}
 		}

@@ -9,7 +9,9 @@ import flixel.util.FlxStringUtil;
 import options.OptionsState;
 import states.FreeplayState;
 import states.StoryMenuState;
-import guineapiguuhh_stuff.WinUtil;
+import portable.utils.WinUtil;
+import portable.objects.MCButton;
+import portable.VirtualMouse;
 
 class MCPauseSubState extends MusicBeatSubstate
 {
@@ -85,21 +87,15 @@ class MCPauseSubState extends MusicBeatSubstate
 	{
 		var distanceButtons = 60;
 		var resumeButton = new MCButton("Back to Game", 0, distanceY, LARGE);
-		resumeButton.callback = function(self)
-		{
-			close();
-		}
+		resumeButton.callback = function(self) close();
 		resumeButton.screenCenter(X);
-		resumeButton.collisionCam = pauseCam;
+		resumeButton.cameras = [pauseCam];
 
-		var restartButton = new MCButton("Restart Song", 391.5, distanceButtons + resumeButton.mcButton.y, SMALL);
-		restartButton.callback = function(self)
-		{
-			restartSong();
-		}
-		restartButton.collisionCam = pauseCam;
+		var restartButton = new MCButton("Restart Song", 391.5, distanceButtons + resumeButton.y, SMALL);
+		restartButton.callback = function(self) restartSong();
+		restartButton.cameras = [pauseCam];
 
-		var optionsButton = new MCButton("Options...", 645.5, distanceButtons + resumeButton.mcButton.y, SMALL);
+		var optionsButton = new MCButton("Options...", 645.5, distanceButtons + resumeButton.y, SMALL);
 		optionsButton.callback = function(self)
 		{
 			PlayState.instance.paused = true; // For lua
@@ -114,9 +110,9 @@ class MCPauseSubState extends MusicBeatSubstate
 			}
 			OptionsState.onPlayState = true;
 		}
-		optionsButton.collisionCam = pauseCam;
+		optionsButton.cameras = [pauseCam];
 
-		var exitButton = new MCButton("Quit to Title", 0, (distanceButtons * 2) + optionsButton.mcButton.y, LARGE);
+		var exitButton = new MCButton("Quit to Title", 0, (distanceButtons * 2) + optionsButton.y, LARGE);
 		exitButton.callback = function(self)
 		{
 			#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
@@ -135,10 +131,10 @@ class MCPauseSubState extends MusicBeatSubstate
 			PlayState.chartingMode = false;
 			FlxG.camera.followLerp = 0;
 		}
-		exitButton.collisionCam = pauseCam;
+		exitButton.cameras = [pauseCam];
 		exitButton.screenCenter(X);
 
-		VirtualMouse.easyadd([resumeButton, restartButton, optionsButton, exitButton], true);
+		VirtualMouse.add([resumeButton, restartButton, optionsButton, exitButton], true);
 	}
 
 	function getPauseSong()

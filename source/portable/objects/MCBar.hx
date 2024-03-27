@@ -1,4 +1,4 @@
-package guineapiguuhh_stuff;
+package portable.objects;
 
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxSpriteGroup;

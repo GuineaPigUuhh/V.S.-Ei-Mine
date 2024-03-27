@@ -2,12 +2,10 @@ package states;
 
 import objects.AttachedSprite;
 
-// to make the guineapiguuhh_stuff folder more portable
-typedef CreditsState = guineapiguuhh_stuff.MCCredits 
-
+typedef CreditsState = portable.states.CreditsState;
 /*
-class CreditsState extends MusicBeatState
-{
+	class CreditsState extends MusicBeatState
+	{
 	var curSelected:Int = -1;
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -73,7 +71,7 @@ class CreditsState extends MusicBeatState
 		for(i in defaultList) {
 			creditsStuff.push(i);
 		}
-	
+
 		for (i in 0...creditsStuff.length)
 		{
 			var isSelectable:Bool = !unselectableCheck(i);
@@ -102,7 +100,7 @@ class CreditsState extends MusicBeatState
 				if(str.endsWith('-pixel')) icon.antialiasing = false;
 				icon.xAdd = optionText.width + 10;
 				icon.sprTracker = optionText;
-	
+
 				// using a FlxGroup is too much fuss!
 				iconArray.push(icon);
 				add(icon);
@@ -286,5 +284,5 @@ class CreditsState extends MusicBeatState
 	private function unselectableCheck(num:Int):Bool {
 		return creditsStuff[num].length <= 1;
 	}
-}
-*/
+	}
+ */

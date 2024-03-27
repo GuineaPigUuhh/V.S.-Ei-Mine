@@ -11,6 +11,7 @@ class DiscordClient
 	private static final _defaultID:String = "1211466919891439656";
 	public static var clientID(default, set):String = _defaultID;
 	private static var presence:DiscordRichPresence = DiscordRichPresence.create();
+	public static var username:String = '';
 
 	public static function check()
 	{
@@ -42,24 +43,17 @@ class DiscordClient
 	{
 		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
-		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) // New Discord IDs/Discriminator system
-			trace('(Discord) Connected to User (${cast (requestPtr.username, String)}#${cast (requestPtr.discriminator, String)})');
-		else // Old discriminators
-			trace('(Discord) Connected to User (${cast (requestPtr.username, String)})');
-		trace(request);
-
+		var discriminator = Std.parseInt(cast(requestPtr.discriminator, String));
+		username = cast(requestPtr.username, String);
+		trace('(Discord) Connected to User ($username' + (discriminator != 0 ? "#" + cast(requestPtr.discriminator, String) : '') + ')');
 		changePresence();
 	}
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
-	{
 		trace('Discord: Error ($errorCode: ${cast (message, String)})');
-	}
 
 	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
-	{
 		trace('Discord: Disconnected ($errorCode: ${cast (message, String)})');
-	}
 
 	public static function initialize()
 	{
@@ -103,6 +97,9 @@ class DiscordClient
 		presence.largeImageKey = 'icon';
 		presence.largeImageText = "FNF': V.S. Ei Mine";
 		presence.smallImageKey = smallImageKey;
+		presence.startTimestamp = Std.int(startTimestamp / 1000);
+		presence.endTimestamp = Std.int(endTimestamp / 1000);
+
 		#if DISCORD_BUTTONS_ALLOWED
 		presence.button1Label = 'GameBanana';
 		presence.button1Url = 'https://www.youtube.com/watch?v=1rovVKwrs2U';
@@ -110,8 +107,7 @@ class DiscordClient
 		presence.button2Label = 'Game Jolt';
 		presence.button2Url = 'https://www.youtube.com/watch?v=1rovVKwrs2U';
 		#end
-		presence.startTimestamp = Std.int(startTimestamp / 1000);
-		presence.endTimestamp = Std.int(endTimestamp / 1000);
+
 		updatePresence();
 	}
 

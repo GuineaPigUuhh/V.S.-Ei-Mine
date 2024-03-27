@@ -10,12 +10,19 @@ import options.OptionsState;
 import states.editors.MasterEditorMenu;
 import openfl.Assets;
 
-class MainMenuState extends MusicBeatState
-{
+typedef MainMenuState = portable.states.MainMenuState;
+/*
+	class MainMenuState extends MusicBeatState
+	{
 	public static var psychEngineVersion:String = '0.7.3'; // This is also used for Discord RPC
 	public static var engineVersion = '0.2.0';
 
-	var freeplayButton:MCButton; // For the Debug
+	// Debug
+	var freeplayButton:MCButton;
+	var phraseTxt:FlxText;
+
+	// optimize
+	static var phrases:Null<Array<String>> = null;
 
 	override function create()
 	{
@@ -55,15 +62,15 @@ class MainMenuState extends MusicBeatState
 		createMCButtons();
 
 		// Phrases of The Day!!
-		var coolPhrases:String = Assets.getText(Paths.txt('phrases'));
-        var separedPhrases:Array<String> = coolPhrases.split('\n');
+		if (phrases == null)
+			phrases = Assets.getText(Paths.txt('phrases')).split('\n');
 
-		var coolPhraseForTheDay:FlxText = new FlxText(logo.x + logo.width - 200, logo.y + 170, 320, FlxG.random.getObject(separedPhrases));
-		coolPhraseForTheDay.setFormat(Paths.font("minecraft.ttf"), 25, FlxColor.YELLOW, CENTER, SHADOW, 0xFF3C4114);
-		coolPhraseForTheDay.angle = -22;
-		coolPhraseForTheDay.borderSize = 2;
-		add(coolPhraseForTheDay);
-		FlxTween.tween(coolPhraseForTheDay, {"scale.x": 1.08, "scale.y": 1.08}, 0.15, {type: PINGPONG});
+		phraseTxt = new FlxText(logo.x + logo.width - 200, logo.y + 170, 320, FlxG.random.getObject(phrases));
+		phraseTxt.setFormat(Paths.font("minecraft.ttf"), 25, FlxColor.YELLOW, CENTER, SHADOW, 0xFF3C4114);
+		phraseTxt.angle = -22;
+		phraseTxt.borderSize = 2;
+		add(phraseTxt);
+		FlxTween.tween(phraseTxt, {"scale.x": 1.08, "scale.y": 1.08}, 0.15, {type: PINGPONG});
 
 		var modVer:FlxText = new FlxText(3, FlxG.height - 30, FlxG.width, "Friday Night Funkin': V.S. Ei Mine " + engineVersion);
 		modVer.setFormat(Paths.font("minecraft.ttf"), 19, FlxColor.WHITE, LEFT, SHADOW, 0xFF383838);
@@ -92,7 +99,7 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new TitleState());
 			}
-			#if desktop
+			#if !modFinalBuild
 			if (controls.justPressed('debug_1'))
 			{
 				selectedSomethin = true;
@@ -104,8 +111,11 @@ class MainMenuState extends MusicBeatState
 		#if !modFinalBuild
 		if (FlxG.keys.justPressed.F1)
 			freeplayButton.disabled = !freeplayButton.disabled;
+
+		if (FlxG.keys.justPressed.R)
+			phraseTxt.text = FlxG.random.getObject(phrases);
 		#end
-		
+
 		super.update(elapsed);
 	}
 
@@ -113,7 +123,10 @@ class MainMenuState extends MusicBeatState
 	{
 		var distanceButtons = 60;
 		var storyButton = new MCButton("Story mode", 0, 0, LARGE);
-		storyButton.callback = function(self) { new FlxTimer().start(1, function(tmr:FlxTimer) MusicBeatState.switchState(new StoryMenuState())); };
+		storyButton.callback = function(self)
+		{
+			new FlxTimer().start(1, function(tmr:FlxTimer) MusicBeatState.switchState(new StoryMenuState()));
+		};
 		storyButton.clickSound = 'confirmMenu';
 		storyButton.screenCenter(XY);
 
@@ -140,7 +153,7 @@ class MainMenuState extends MusicBeatState
 		};
 
 		var exitButton = new MCButton("Exit Game", 645.5, creditsButton.mcButton.y + 100, SMALL);
-		exitButton.callback = function(self)	Sys.exit(0);
+		exitButton.callback = function(self) Sys.exit(0);
 
 		var canalButton = new MCButton("", optionsButton.mcButton.x - 60, exitButton.mcButton.y, YOUTUBE);
 		canalButton.callback = function(self) CoolUtil.browserLoad("https://www.youtube.com/@lorenzolo2264");
@@ -148,6 +161,15 @@ class MainMenuState extends MusicBeatState
 		var githubButton = new MCButton("", exitButton.mcButton.x + exitButton.mcButton.width + 10, exitButton.mcButton.y, GITHUB);
 		githubButton.callback = function(self) CoolUtil.browserLoad("https://github.com/GuineaPigUuhh/V.S.-Ei-Mine");
 
-		VirtualMouse.easyadd([canalButton, githubButton, exitButton, creditsButton, optionsButton, freeplayButton, storyButton]);
+		VirtualMouse.easyadd([
+			canalButton,
+			githubButton,
+			exitButton,
+			creditsButton,
+			optionsButton,
+			freeplayButton,
+			storyButton
+		]);
 	}
-}
+	}
+ */

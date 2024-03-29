@@ -41,8 +41,8 @@
 	<define name="DISCORD_BUTTONS_ALLOWED" />
 	<!--
 	<define name="PSYCH_WATERMARKS"/>
-	<define name="modFinalBuild"/>
 	-->
+	<define name="modFinalBuild" />
 	<define name="VIDEOS_ALLOWED" if="windows || linux || android" unless="32bits" />
 
 	<section if="officialBuild">

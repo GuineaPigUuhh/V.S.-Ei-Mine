@@ -73,7 +73,8 @@ class CreditsState extends MusicBeatState
 		if (controls.BACK)
 			backButton.callback(backButton);
 
-		final slide_keys = FlxG.keys.anyPressed([SPACE, ENTER]) || FlxG.gamepads.lastActive.pressed.A;
+		final slide_keys = FlxG.keys.anyPressed([SPACE, ENTER])
+			|| (FlxG.gamepads.lastActive != null ? FlxG.gamepads.lastActive.pressed.A : false);
 		if (!passed)
 			camObject.y += 0.8 * (slide_keys ? 4 : 1.6);
 

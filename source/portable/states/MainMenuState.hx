@@ -64,7 +64,8 @@ class MainMenuState extends MusicBeatState
 		var storyButton = new MCButton("Story mode", 0, 0, LARGE);
 		storyButton.callback = function(self)
 		{
-			new FlxTimer().start(1, function(tmr:FlxTimer) MusicBeatState.switchState(new StoryMenuState()));
+			self.disabled = true;
+			FlxFlicker.flicker(self, 1, 0.1, true, true, function(f) MusicBeatState.switchState(new StoryMenuState()));
 		};
 		storyButton.clickSound = 'confirmMenu';
 		storyButton.screenCenter(XY);

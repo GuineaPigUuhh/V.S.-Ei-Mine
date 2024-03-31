@@ -41,7 +41,10 @@ class MCButton extends FlxSpriteGroup
 	public var label:MCText;
 
 	public var callback:Null<(MCButton) -> Void> = null;
+
 	public var disabled(default, set):Bool = false;
+	public var disabled_visual(default, set):Bool = false;
+	public var disabled_callback(default, set):Bool = false;
 
 	public var mouseParent:VirtualMouse;
 
@@ -89,14 +92,14 @@ class MCButton extends FlxSpriteGroup
 		if (checkOverlaps() && !disabled)
 		{
 			button.animation.play("selected");
-			if (callback != null
+			if ((callback != null && !disabled_callback)
 				&& (FlxG.mouse.justPressed || (mouseParent != null && mouseParent.enabled && FlxG.gamepads.lastActive.justPressed.A)))
 			{
 				callback(this);
 				FlxG.sound.play(Paths.sound(clickSound));
 			}
 		}
-		else if (!disabled && button.animation.curAnim.name != "idle")
+		else if (!disabled_visual && button.animation.curAnim.name != "idle")
 			button.animation.play("idle");
 	}
 
@@ -105,12 +108,20 @@ class MCButton extends FlxSpriteGroup
 
 	private function set_disabled(value:Bool):Bool
 	{
-		disabled = value;
-		button.animation.play(disabled ? "blank" : "idle");
-		label.color = disabled ? FlxColor.GRAY : FlxColor.WHITE;
-		label.borderSize = disabled ? 0 : 1.5;
-		return disabled;
+		return disabled = disabled_visual = disabled_callback = value;
 	}
+
+	private function set_disabled_visual(value:Bool)
+	{
+		disabled_visual = value;
+		button.animation.play(disabled_visual ? "blank" : "idle");
+		label.color = disabled_visual ? FlxColor.GRAY : FlxColor.WHITE;
+		label.borderSize = disabled_visual ? 0 : 1.5;
+		return disabled_visual;
+	}
+
+	private function set_disabled_callback(value:Bool)
+		return disabled_callback = value;
 
 	override private function set_x(value:Float):Float
 	{

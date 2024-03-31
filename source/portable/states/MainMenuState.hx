@@ -13,17 +13,39 @@ import openfl.Assets;
 import states.TitleState;
 import portable.objects.MCText;
 import portable.utils.WinUtil;
+import states.PlayState;
+#if !flash
+import flixel.addons.display.FlxRuntimeShader;
+import openfl.filters.ShaderFilter;
+#end
+import shaders.Panorama;
 
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.3'; // This is also used for Discord RPC
 
-	// Debug
+	// Buttons
+	var storyButton:MCButton;
 	var freeplayButton:MCButton;
+	var creditsButton:MCButton;
+	var optionsButton:MCButton;
+	var exitButton:MCButton;
+
+	// Debug
 	var phraseTxt:MCText;
 
 	// optimize
 	static var thePhrase:Null<String> = null;
+
+	private var disable_buttons(default, set):Bool;
+
+	private function set_disable_buttons(value:Bool)
+	{
+		disable_buttons = value;
+		for (i in [storyButton, freeplayButton, creditsButton, optionsButton, exitButton])
+			i.disabled_callback = disable_buttons;
+		return disable_buttons;
+	}
 
 	override function create()
 	{
@@ -42,9 +64,8 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		var random_paronama = FlxG.random.int(1, 4);
-		var bg = new FlxSprite(508).loadGraphic(Paths.image('guineapiguuhh_stuff/backgrounds/final_' + random_paronama));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		var bg = new FlxSprite(508).loadGraphic(Paths.image('guineapiguuhh_stuff/backgrounds/final_' + FlxG.random.int(1, 4)));
+		bg.antialiasing = false;
 		bg.scrollFactor.set(0, 0);
 		bg.updateHitbox();
 		bg.screenCenter(Y);
@@ -53,33 +74,42 @@ class MainMenuState extends MusicBeatState
 		FlxTween.tween(bg, {x: -1265}, 50, {type: PINGPONG});
 
 		var logo:FlxSprite = new FlxSprite(0, 50).loadGraphic(Paths.image('guineapiguuhh_stuff/logo'));
-		logo.antialiasing = ClientPrefs.data.antialiasing;
-		logo.scrollFactor.set(0, 0);
+		logo.antialiasing = false;
+		logo.scrollFactor.set(0, 0); // pemi
 		logo.scale.set(0.65, 0.65);
 		logo.updateHitbox();
 		logo.screenCenter(X);
 		add(logo);
 
 		var distanceButtons = 60;
-		var storyButton = new MCButton("Story mode", 0, 0, LARGE);
+		storyButton = new MCButton("Story mode", 0, 0, LARGE);
 		storyButton.callback = function(self)
 		{
 			self.disabled = true;
 			FlxFlicker.flicker(self, 1, 0.1, true, true, function(f) MusicBeatState.switchState(new StoryMenuState()));
+			disable_buttons = true;
 		};
 		storyButton.clickSound = 'confirmMenu';
 		storyButton.screenCenter(XY);
 
 		freeplayButton = new MCButton("Freeplay", 0, storyButton.y + distanceButtons, LARGE);
-		freeplayButton.callback = function(self) MusicBeatState.switchState(new FreeplayState());
+		freeplayButton.callback = function(self)
+		{
+			MusicBeatState.switchState(new FreeplayState());
+			disable_buttons = true;
+		};
 		freeplayButton.disabled = !ClientPrefs.data.freeplayUnlock;
 		freeplayButton.screenCenter(X);
 
-		var creditsButton = new MCButton("Credits", 0, freeplayButton.y + distanceButtons, LARGE);
-		creditsButton.callback = function(self) MusicBeatState.switchState(new CreditsState());
+		creditsButton = new MCButton("Credits", 0, freeplayButton.y + distanceButtons, LARGE);
+		creditsButton.callback = function(self)
+		{
+			MusicBeatState.switchState(new CreditsState());
+			disable_buttons = true;
+		};
 		creditsButton.screenCenter(X);
 
-		var optionsButton = new MCButton("Options...", 391.5, creditsButton.y + 100, SMALL);
+		optionsButton = new MCButton("Options...", 391.5, creditsButton.y + 100, SMALL);
 		optionsButton.callback = function(self)
 		{
 			MusicBeatState.switchState(new OptionsState());
@@ -90,9 +120,10 @@ class MainMenuState extends MusicBeatState
 				PlayState.SONG.splashSkin = null;
 				PlayState.stageUI = 'normal';
 			}
+			disable_buttons = true;
 		};
 
-		var exitButton = new MCButton("Exit Game", 645.5, creditsButton.y + 100, SMALL);
+		exitButton = new MCButton("Exit Game", 645.5, creditsButton.y + 100, SMALL);
 		exitButton.callback = function(self) Sys.exit(0);
 
 		var canalButton = new MCButton("", optionsButton.x - 60, exitButton.y, YOUTUBE);
@@ -129,6 +160,7 @@ class MainMenuState extends MusicBeatState
 		add(modVer);
 
 		add(vm);
+
 		super.create();
 	}
 

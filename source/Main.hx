@@ -15,6 +15,7 @@ import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import states.TitleState;
+import portable.utils.WinUtil;
 #if linux
 import lime.graphics.Image;
 #end

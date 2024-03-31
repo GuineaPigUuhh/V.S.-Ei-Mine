@@ -43,7 +43,7 @@ class CreditsState extends MusicBeatState
 		credits.alignment = CENTER;
 		add(credits);
 
-		thanks = new FlxSprite(0, (credits.y + credits.height) + 800).loadGraphic(Paths.image('guineapiguuhh_stuff/thanksForPlaying'));
+		thanks = new FlxSprite(0, (credits.y + credits.height) + 700).loadGraphic(Paths.image('guineapiguuhh_stuff/thanksForPlaying'));
 		thanks.antialiasing = false;
 		thanks.scrollFactor.set(creditsScroll, creditsScroll);
 		thanks.scale.set(0.8, 0.8);
@@ -64,7 +64,7 @@ class CreditsState extends MusicBeatState
 	}
 
 	var passed:Bool = false;
-	final final_pos:Float = 6503.19999999938;
+	final final_pos:Float = 8796.31999999988;
 
 	override function update(elapsed:Float)
 	{

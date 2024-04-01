@@ -6,6 +6,7 @@ import flixel.system.scaleModes.FixedScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.system.scaleModes.RelativeScaleMode;
+import portable.utils.WinUtil;
 
 class InitState extends MusicBeatState
 {
@@ -43,6 +44,10 @@ class InitState extends MusicBeatState
 
 		if (FlxG.save.data.weekCompleted != null)
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
+
+		#if (windows && cpp)
+		WinUtil.setDarkMode(true);
+		#end
 
 		super.create();
 	}

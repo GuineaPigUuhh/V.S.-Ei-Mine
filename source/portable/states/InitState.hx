@@ -45,7 +45,7 @@ class InitState extends MusicBeatState
 		if (FlxG.save.data.weekCompleted != null)
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 
-		#if (windows && cpp)
+		#if (windows && cpp && DARK_MODE)
 		WinUtil.setDarkMode(true);
 		#end
 

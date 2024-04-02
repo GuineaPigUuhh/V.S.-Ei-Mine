@@ -27,6 +27,7 @@
 	<define name="ACHIEVEMENTS_ALLOWED" />
 	<define name="DISCORD_ALLOWED" />
 	<define name="DISCORD_BUTTONS_ALLOWED" />
+	<define name="DARK_MODE" />
 	<define name="modFinalBuild" />
 	<define name="VIDEOS_ALLOWED" if="windows || linux || android" unless="32bits" />
 

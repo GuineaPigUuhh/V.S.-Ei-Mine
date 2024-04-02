@@ -100,12 +100,12 @@ class DiscordClient
 		presence.startTimestamp = Std.int(startTimestamp / 1000);
 		presence.endTimestamp = Std.int(endTimestamp / 1000);
 
-		#if DISCORD_BUTTONS_ALLOWED
-		presence.button1Label = 'GameBanana';
-		presence.button1Url = 'https://www.youtube.com/watch?v=1rovVKwrs2U';
+		#if (DISCORD_BUTTONS_ALLOWED && sys)
+		presence.button1Label = "GameBanana";
+		presence.button1Url = "https://gamebanana.com/mods/504878";
 
-		presence.button2Label = 'Game Jolt';
-		presence.button2Url = 'https://www.youtube.com/watch?v=1rovVKwrs2U';
+		presence.button2Label = "Game Jolt";
+		presence.button2Url = "https://gamejolt.com/games/EiMine/887482";
 		#end
 
 		updatePresence();

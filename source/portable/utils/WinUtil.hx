@@ -2,7 +2,7 @@ package portable.utils;
 
 import lime.app.Application;
 
-#if (windows && cpp)
+#if (windows && cpp && DARK_MODE)
 @:buildXml('
 <target id="haxe">
     <lib name="dwmapi.lib" if="windows" />
@@ -42,7 +42,7 @@ class WinUtil
 	public static function getVersion()
 		return Application.current.meta["version"];
 
-	#if (windows && cpp)
+	#if (windows && cpp && DARK_MODE)
 	/**
 	 * Change the Window Theme to Dark Mode
 	 */

@@ -20,6 +20,8 @@ class CreditsState extends MusicBeatState
 	{
 		super.create();
 
+		FlxG.sound.playMusic(Paths.music('creditos'));
+
 		camObject = new FlxObject(0, 20, 0, 0);
 		camObject.screenCenter(X);
 
@@ -56,6 +58,7 @@ class CreditsState extends MusicBeatState
 		{
 			self.disabled = true;
 			MusicBeatState.switchState(new MainMenuState());
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		};
 		backButton.scrollFactor.set();
 		add(backButton);
